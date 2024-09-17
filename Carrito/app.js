@@ -76,7 +76,7 @@ function fetchProducts() {
     fetch('https://api.escuelajs.co/api/v1/products')
         .then(response => response.json())
         .then(products => {
-            products.forEach(product => makeProducts(product))
+            products.slice(0, 10).forEach(product => makeProducts(product))
         })
         .catch(error => console.error('Error fetching products:', error))
 }
@@ -94,4 +94,3 @@ addProductButton.addEventListener('click', () => {
     };
     makeProducts(newProduct)
 });
-    
