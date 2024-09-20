@@ -1,87 +1,122 @@
-const containerProducts = document.getElementById('container-product')
-const addProductButton = document.getElementById('add-product')
+const containerProducts = document.getElementById('container-product');
+const addProductButton = document.getElementById('add-product');
+const cartIcon = document.getElementById('cart-icon');
+const cartMenu = document.getElementById('cart-menu');
+const cartList = document.getElementById('cart-list');
+const cartCount = document.getElementById('cart-count');
+const clearCartButton = document.getElementById('clear-cart');
+
+let cart = {};
 
 const makeProducts = (product) => {
-    const {id, title, price, description, category, images} = product
+    const {id, title, price, description, category, images} = product;
 
-    const cardProduct = document.createElement('div')
-    cardProduct.classList.add('card-product')
-    cardProduct.id = `product-${id}`
+    const cardProduct = document.createElement('div');
+    cardProduct.classList.add('card-product');
+    cardProduct.id = `product-${id}`;
 
-    const containerImgProduct = document.createElement('div')
-    containerImgProduct.classList.add('img-card')
+    const containerImgProduct = document.createElement('div');
+    containerImgProduct.classList.add('img-card');
 
-    const imgProduct = document.createElement('img')
-    imgProduct.src = images[0].replaceAll("[\"", "").replaceAll("\"]", "")
-    imgProduct.alt = description
+    const imgProduct = document.createElement('img');
+    imgProduct.src = images[0].replaceAll("[\"", "").replaceAll("\"]", "");
+    imgProduct.alt = description;
 
-    const titleProduct = document.createElement('h2')
-    titleProduct.textContent = title
+    const titleProduct = document.createElement('h2');
+    titleProduct.textContent = title;
 
-    const containerDescription = document.createElement('div')
-    containerDescription.classList.add('description-card')
+    const containerDescription = document.createElement('div');
+    containerDescription.classList.add('description-card');
 
-    const descriptionProduct = document.createElement('p')
-    descriptionProduct.textContent = description
+    const descriptionProduct = document.createElement('p');
+    descriptionProduct.textContent = description;
 
-    const priceProduct = document.createElement('p')
-    priceProduct.textContent = `$${price}`
+    const priceProduct = document.createElement('p');
+    priceProduct.textContent = `$${price}`;
 
-    const categoryProduct = document.createElement('p')
-    categoryProduct.textContent = category
-    categoryProduct.id = `category-${id}`
+    const categoryProduct = document.createElement('p');
+    categoryProduct.textContent = category;
+    categoryProduct.id = `category-${id}`;
 
-    const btnAddToCart = document.createElement('button')
-    btnAddToCart.textContent = 'Agregar al carrito'
-    btnAddToCart.addEventListener('click', () => addProducts(product))
+    const btnAddToCart = document.createElement('button');
+    btnAddToCart.textContent = 'Agregar';
+    btnAddToCart.addEventListener('click', () => addToCart(product));
 
-    const btnRemove = document.createElement('button')
-    btnRemove.textContent = 'Eliminar producto'
-    btnRemove.addEventListener('click', () => removeProduct(id))
+    cardProduct.appendChild(containerImgProduct);
+    cardProduct.appendChild(containerDescription);
 
-    cardProduct.appendChild(containerImgProduct)
-    cardProduct.appendChild(containerDescription)
+    containerImgProduct.appendChild(imgProduct);
 
-    containerImgProduct.appendChild(imgProduct)
+    containerDescription.appendChild(titleProduct);
+    containerDescription.appendChild(descriptionProduct);
+    containerDescription.appendChild(priceProduct);
+    containerDescription.appendChild(categoryProduct);
+    containerDescription.appendChild(btnAddToCart);
 
-    containerDescription.appendChild(titleProduct)
-    containerDescription.appendChild(descriptionProduct)
-    containerDescription.appendChild(priceProduct)
-    containerDescription.appendChild(categoryProduct)
-    containerDescription.appendChild(btnAddToCart)
-    containerDescription.appendChild(btnRemove)
+    containerProducts.appendChild(cardProduct);
+};
 
-    containerProducts.appendChild(cardProduct)
-}
-
-function addProducts(product){
-    const li = document.createElement('li')
-    li.textContent = `${product.title} - $${product.price}`
-    li.id = `cart-item-${product.id}`
-    const removeButton = document.createElement('button')
-    removeButton.textContent = 'Eliminar del carrito'
-    removeButton.addEventListener('click', () => {
-        document.getElementById('cart-list').removeChild(li)
-    })
-    document.getElementById('cart-list').appendChild(li)
-}
-
-function removeProduct(id) {
-    const productElement = document.getElementById(`product-${id}`)
-    if (productElement) {
-        containerProducts.removeChild(productElement)
+function addToCart(product) {
+    if (cart[product.id]) {
+        cart[product.id].quantity++;
+    } else {
+        cart[product.id] = { ...product, quantity: 1 };
     }
+    updateCartUI();
 }
+
+function updateCartUI() {
+    cartList.innerHTML = '';
+    let totalItems = 0;
+    
+    for (const id in cart) {
+        const item = cart[id];
+        totalItems += item.quantity;
+        
+        const li = document.createElement('li');
+        li.innerHTML = `
+            ${item.title} - $${item.price} x ${item.quantity}
+            <button class="add-one" data-id="${id}">+</button>
+            <button class="remove-one" data-id="${id}">-</button>
+        `;
+        cartList.appendChild(li);
+    }
+    
+    cartCount.textContent = totalItems;
+}
+
+cartList.addEventListener('click', (e) => {
+    const id = e.target.dataset.id;
+    if (e.target.classList.contains('add-one')) {
+        cart[id].quantity++;
+    } else if (e.target.classList.contains('remove-one')) {
+        cart[id].quantity--;
+        if (cart[id].quantity === 0) {
+            delete cart[id];
+        }
+    }
+    updateCartUI();
+});
+
+clearCartButton.addEventListener('click', () => {
+    cart = {};
+    updateCartUI();
+});
+
+cartIcon.addEventListener('click', () => {
+    cartMenu.classList.toggle('hidden');
+});
+
 function fetchProducts() {
     fetch('https://api.escuelajs.co/api/v1/products')
         .then(response => response.json())
         .then(products => {
-            products.slice(0, 10).forEach(product => makeProducts(product))
+            products.slice(0, 10).forEach(product => makeProducts(product));
         })
-        .catch(error => console.error('Error fetching products:', error))
+        .catch(error => console.error('Error fetching products:', error));
 }
 
-fetchProducts()
+fetchProducts();
 
 addProductButton.addEventListener('click', () => {
     const newProduct = {
@@ -90,7 +125,8 @@ addProductButton.addEventListener('click', () => {
         price: 99.99,
         description: "Descripción del nuevo producto",
         category: "Nueva Categoría",
-        image: "https://api.escuelajs.co/api/v1/products/1"
+        images: ["https://api.escuelajs.co/api/v1/products/1"]
     };
-    makeProducts(newProduct)
+    makeProducts(newProduct);
 });
+
