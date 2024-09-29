@@ -10,6 +10,10 @@
 <body>
     <header>
         <h1>Nuestra Tienda</h1>
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="Buscar productos...">
+            <button id="search-button">Buscar</button>
+        </div>
         <button id="add-product">Agregar Producto</button>
         <div id="cart-icon">
             <i class="fas fa-shopping-cart"></i>
@@ -20,8 +24,14 @@
     <main id="container-product"></main>
 
     <div id="cart-menu" class="hidden">
-        <h2>Carrito de Compras</h2>
+        <div id="cart-header">
+            <h2>Carrito de Compras</h2>
+            <button id="close-cart"><i class="fas fa-times"></i></button>
+        </div>
         <ul id="cart-list"></ul>
+        <div id="cart-summary">
+            <p>Total: $<span id="cart-total">0.00</span></p>
+        </div>
         <div id="cart-actions">
             <button id="clear-cart">Eliminar todo</button>
         </div>
