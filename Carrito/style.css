@@ -2,7 +2,8 @@ body {
    font-family: Arial, sans-serif;
    margin: 0;
    padding: 20px;
-   background-color: #f0f0f0;
+   background-color: #333333;
+   color: #ffffff; 
 }
 
 header {
@@ -16,6 +17,32 @@ h1 {
    color: rgb(197, 72, 49);
 }
 
+#search-container {
+   display: flex;
+   align-items: center;
+}
+
+#search-input {
+   padding: 8px;
+   margin-right: 10px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: #444444;
+   color: #ffffff;
+}
+search-input::placeholder {
+   color: #aaaaaa; 
+}
+
+#search-button {
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   padding: 8px 12px;
+   border-radius: 4px;
+   cursor: pointer;
+}
+
 #container-product {
    display: flex;
    flex-wrap: wrap;
@@ -23,11 +50,11 @@ h1 {
 }
 
 .card-product {
-   background-color: white;
+   background-color: #444444;
    border-radius: 8px;
    padding: 15px;
    width: 250px;
-   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .img-card img {
@@ -43,11 +70,12 @@ h1 {
 .description-card h2 {
    font-size: 18px;
    margin-bottom: 5px;
+   color: #ffffff;
 }
 
 .description-card p {
    font-size: 14px;
-   color: #666;
+   color: #cccccc;
    margin: 5px 0;
 }
 
@@ -69,6 +97,7 @@ button:hover {
    font-size: 24px;
    cursor: pointer;
    position: relative;
+   color: #ffffff;
 }
 
 #cart-count {
@@ -88,8 +117,8 @@ button:hover {
    top: 0;
    width: 40%;
    height: 100%;
-   background-color: white;
-   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+   background-color: #444444; 
+   box-shadow: -2px 0 5px rgba(0,0,0,0.3);
    padding: 20px;
    overflow-y: auto;
    transition: transform 0.3s ease-in-out;
@@ -97,6 +126,21 @@ button:hover {
 
 #cart-menu.hidden {
    transform: translateX(100%);
+}
+
+#cart-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 20px;
+}
+
+#close-cart {
+   background: none;
+   border: none;
+   font-size: 24px;
+   cursor: pointer;
+   color: #000000; 
 }
 
 #cart-list {
@@ -109,7 +153,14 @@ button:hover {
    justify-content: space-between;
    align-items: center;
    padding: 10px 0;
-   border-bottom: 1px solid #eee;
+   border-bottom: 1px solid #555555;
+   color: #ffffff;
+}
+
+#cart-summary {
+   margin-top: 20px;
+   font-weight: bold;
+   color: #ffffff;
 }
 
 #cart-actions {
@@ -140,4 +191,4 @@ button:hover {
 
 #clear-cart:hover {
    background-color: #d32f2f;
-}
+   }
